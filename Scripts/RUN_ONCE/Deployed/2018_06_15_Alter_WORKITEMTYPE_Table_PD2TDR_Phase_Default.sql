@@ -1,6 +1,0 @@
-use [WTS]
-go
-
-update WORKITEMTYPE
-set PDDTDR_PHASEID = 1
-WHERE PDDTDR_PHASEID = 9

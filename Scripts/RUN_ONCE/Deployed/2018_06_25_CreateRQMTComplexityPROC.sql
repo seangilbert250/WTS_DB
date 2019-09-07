@@ -1,6 +1,0 @@
-CREATE PROCEDURE [dbo].[RQMTComplexityList_Get]
-AS
-BEGIN
-	SELECT * FROM RQMTComplexity ORDER BY Sort
-END
-GO

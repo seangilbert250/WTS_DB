@@ -1,8 +1,0 @@
-use [WTS]
-go
-
-ALTER TABLE CONTRACT
-    ADD CRREPORTLASTRUNBY nvarchar(255),
-        CRREPORTLASTRUNDATE datetime
-
-go

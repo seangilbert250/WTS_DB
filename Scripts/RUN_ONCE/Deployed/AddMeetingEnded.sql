@@ -1,2 +1,0 @@
-ALTER TABLE AORMeetingInstance
-  ADD MeetingEnded BIT NOT NULL DEFAULT(0)

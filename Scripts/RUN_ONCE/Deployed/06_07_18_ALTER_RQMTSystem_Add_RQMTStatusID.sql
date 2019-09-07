@@ -1,9 +1,0 @@
-USE [WTS]
-GO
-
-ALTER TABLE [dbo].[RQMTSystem] ADD RQMTStatusID int NULL
-GO
-
-ALTER TABLE [dbo].[RQMTSystem]  WITH CHECK ADD  CONSTRAINT [FK_RQMTSystem_RQMTStatusID] FOREIGN KEY([RQMTStatusID])
-REFERENCES [dbo].[RQMTAttribute] ([RQMTAttributeID])
-GO

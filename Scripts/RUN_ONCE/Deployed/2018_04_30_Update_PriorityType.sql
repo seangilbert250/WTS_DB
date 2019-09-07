@@ -1,6 +1,0 @@
-use [WTS]
-go
-
-update PRIORITYTYPE
-set PRIORITYTYPE = 'AOR', DESCRIPTION = 'AOR'
-where PRIORITYTYPEID = 4
