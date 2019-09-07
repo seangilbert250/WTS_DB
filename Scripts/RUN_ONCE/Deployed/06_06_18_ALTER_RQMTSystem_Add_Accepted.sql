@@ -1,0 +1,5 @@
+USE [WTS]
+GO
+
+ALTER TABLE [dbo].[RQMTSystem] ADD RQMTAccepted bit NOT NULL DEFAULT (0)
+GO

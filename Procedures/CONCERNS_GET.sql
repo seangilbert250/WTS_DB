@@ -1,0 +1,49 @@
+﻿USE WTS
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'[CONCERNS_GET]')
+AND OBJECTPROPERTY(id, N'IsProcedure') = 1)
+
+DROP PROCEDURE [CONCERNS_GET]
+
+GO
+
+CREATE PROCEDURE [dbo].[CONCERNS_GET]
+AS
+SELECT 'Deployed Primary Tasks' AS Concerns, WI.WORKITEMID AS 'Primary Task #', WIH.UPDATEDDATE AS 'Longest # of Days Awaiting Closure'
+FROM WORKITEM WI
+	, [STATUS] S
+	, WorkItem_History WIH
+WHERE S.STATUS = 'Deployed'
+	AND S.STATUSID = WI.STATUSID
+	AND WIH.WORKITEMID = WI.WORKITEMID
+	AND WIH.NewValue = 'Deployed'
+	AND WIH.UPDATEDDATE = (SELECT MIN(WIH.UPDATEDDATE) AS UPDATEDDATE
+							FROM WORKITEM WI
+								, [STATUS] S
+								, WorkItem_History WIH
+							WHERE S.STATUS = 'Deployed'
+								AND S.STATUSID = WI.STATUSID
+								AND WIH.WORKITEMID = WI.WORKITEMID
+								AND WIH.NewValue = 'Deployed')
+UNION
+
+SELECT 'High Priority Primary Tasks' AS Concerns, WI.WORKITEMID AS 'Primary Task #', WIH.UPDATEDDATE AS 'Longest # of Days Awaiting Closure'
+FROM WORKITEM WI
+	, [STATUS] S
+	, WorkItem_History WIH
+WHERE (S.STATUS = 'Deployed' OR S.STATUS = 'Checked In')
+	AND S.STATUSID = WI.STATUSID
+	AND WI.PRIORITYID = 1  --HIGH PRIORITY WORK ITEM
+	AND WIH.WORKITEMID = WI.WORKITEMID
+	AND (WIH.NewValue = 'Deployed' OR WIH.NewValue = 'Checked In')
+	AND WIH.UPDATEDDATE = (SELECT MIN(WIH.UPDATEDDATE) AS UPDATEDDATE
+							FROM WORKITEM WI
+								, [STATUS] S
+								, WorkItem_History WIH
+							WHERE (S.STATUS = 'Deployed' OR S.STATUS = 'Checked In')
+								AND S.STATUSID = WI.STATUSID
+								AND WI.PRIORITYID = 1  --HIGH PRIORITY WORK ITEM
+								AND WIH.WORKITEMID = WI.WORKITEMID
+								AND (WIH.NewValue = 'Deployed' OR WIH.NewValue = 'Checked In'))
+

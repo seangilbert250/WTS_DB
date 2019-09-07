@@ -1,0 +1,23 @@
+USE [WTS]
+GO
+
+ALTER TABLE [dbo].[RQMTSystem] ADD RQMTStageID int NULL
+GO
+ALTER TABLE [dbo].[RQMTSystem]
+ADD CONSTRAINT FK_RQMTSystem_RQMTStageID
+	FOREIGN KEY (RQMTStageID) REFERENCES RQMTAttribute(RQMTAttributeID)
+GO
+
+ALTER TABLE [dbo].[RQMTSystem] ADD CriticalityID int NULL
+GO
+ALTER TABLE [dbo].[RQMTSystem]
+ADD CONSTRAINT FK_RQMTSystem_CriticalityID
+	FOREIGN KEY (CriticalityID) REFERENCES RQMTAttribute(RQMTAttributeID)
+GO
+
+ALTER TABLE [dbo].[RQMTSystemDefect] ADD ImpactID int NULL
+GO
+ALTER TABLE [dbo].[RQMTSystemDefect]
+ADD CONSTRAINT FK_RQMTSystemDefect_ImpactID
+	FOREIGN KEY (ImpactID) REFERENCES RQMTAttribute(RQMTAttributeID)
+GO

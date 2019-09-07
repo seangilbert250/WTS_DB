@@ -1,0 +1,43 @@
+USE WTS
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'[WTS_ALLOCATION_SET_GROUPID]')
+AND OBJECTPROPERTY(id, N'IsProcedure') = 1)
+
+DROP PROCEDURE WTS_ALLOCATION_SET_GROUPID
+
+GO
+
+CREATE PROCEDURE [dbo].WTS_ALLOCATION_SET_GROUPID
+	@ALLOCATIONID int,
+	@ALLOCATIONGROUPID int,
+	@saved int output
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	
+	DECLARE @count int;
+	SET @count = 0;
+	SET @saved = 0;
+
+	IF ISNULL(@ALLOCATIONID,0) > 0
+		BEGIN
+			SELECT @count = COUNT(*) FROM [WTS].[dbo].[ALLOCATION] WHERE ALLOCATIONID = @ALLOCATIONID;
+
+			IF (ISNULL(@count,0) > 0)
+				BEGIN
+					--UPDATE NOW
+					UPDATE ALLOCATION
+					SET
+						ALLOCATIONGROUPID = @ALLOCATIONGROUPID
+					WHERE
+						ALLOCATIONID = @ALLOCATIONID;
+					
+					SET @saved = 1; 
+				END;
+		END;
+END;
+
+GO

@@ -1,0 +1,52 @@
+
+CREATE TABLE [dbo].[RQMTSystemRQMTWorkArea](
+	[RQMTSystemRQMTWorkAreaID] [int] IDENTITY(1,1) NOT NULL,
+	[RQMTSystemID] [int] NOT NULL,
+	[WorkAreaID] [int] NOT NULL,
+	[Archive] [bit] NOT NULL,
+	[CreatedBy] [nvarchar](255) NOT NULL,
+	[CreatedDate] [datetime] NOT NULL,
+	[UpdatedBy] [nvarchar](255) NOT NULL,
+	[UpdatedDate] [datetime] NOT NULL,
+ CONSTRAINT [PK_RQMTSystemRQMTWorkArea] PRIMARY KEY CLUSTERED 
+(
+	[RQMTSystemRQMTWorkAreaID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY],
+ CONSTRAINT [UK_RQMTSystemRQMTWorkArea] UNIQUE NONCLUSTERED 
+(
+	[RQMTSystemID] ASC,
+	[WorkAreaID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[RQMTSystemRQMTWorkArea] ADD  DEFAULT ((0)) FOR [Archive]
+GO
+
+ALTER TABLE [dbo].[RQMTSystemRQMTWorkArea] ADD  DEFAULT ('WTS') FOR [CreatedBy]
+GO
+
+ALTER TABLE [dbo].[RQMTSystemRQMTWorkArea] ADD  DEFAULT (getdate()) FOR [CreatedDate]
+GO
+
+ALTER TABLE [dbo].[RQMTSystemRQMTWorkArea] ADD  DEFAULT ('WTS') FOR [UpdatedBy]
+GO
+
+ALTER TABLE [dbo].[RQMTSystemRQMTWorkArea] ADD  DEFAULT (getdate()) FOR [UpdatedDate]
+GO
+
+ALTER TABLE [dbo].[RQMTSystemRQMTWorkArea]  WITH CHECK ADD  CONSTRAINT [FK_RQMTSystemRQMTWorkArea_RQMTSystem] FOREIGN KEY([RQMTSystemID])
+REFERENCES [dbo].[RQMTSystem] ([RQMTSystemID])
+GO
+
+ALTER TABLE [dbo].[RQMTSystemRQMTWorkArea] CHECK CONSTRAINT [FK_RQMTSystemRQMTWorkArea_RQMTSystem]
+GO
+
+ALTER TABLE [dbo].[RQMTSystemRQMTWorkArea]  WITH CHECK ADD  CONSTRAINT [FK_RQMTSystemRQMTWorkArea_WorkArea] FOREIGN KEY([WorkAreaID])
+REFERENCES [dbo].[WorkArea] ([WorkAreaID])
+GO
+
+ALTER TABLE [dbo].[RQMTSystemRQMTWorkArea] CHECK CONSTRAINT [FK_RQMTSystemRQMTWorkArea_WorkArea]
+GO
+
+

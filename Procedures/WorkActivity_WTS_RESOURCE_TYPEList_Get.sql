@@ -1,0 +1,58 @@
+﻿USE WTS
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'[WorkActivity_WTS_RESOURCE_TYPEList_Get]')
+AND OBJECTPROPERTY(id, N'IsProcedure') = 1)
+
+DROP PROCEDURE [WorkActivity_WTS_RESOURCE_TYPEList_Get]
+
+GO
+
+CREATE PROCEDURE [dbo].[WorkActivity_WTS_RESOURCE_TYPEList_Get]
+	@WORKITEMTYPEID int = null
+AS
+BEGIN
+
+		SELECT * FROM (
+			--Add empty header row, used to make sure header is always created and row for cloning to create new records
+			SELECT
+				0 AS WorkActivity_WTS_RESOURCE_TYPEID
+				, 0 AS WORKITEMTYPEID
+				, '' AS WORKITEMTYPE
+				, 0 AS WTS_RESOURCE_TYPEID
+				, '' AS WTS_RESOURCE_TYPE
+				, '' AS [DESCRIPTION]
+				, 0 AS ARCHIVE
+				, '' AS X
+				, '' AS CREATEDBY
+				, '' AS CREATEDDATE
+				, '' AS UPDATEDBY
+				, '' AS UPDATEDDATE
+				,0 AS SORT_ORDER
+			UNION ALL
+
+			SELECT
+				ww.WorkActivity_WTS_RESOURCE_TYPEID
+				, WIT.WORKITEMTYPEID
+				, WIT.WORKITEMTYPE
+				, wrt.WTS_RESOURCE_TYPEID
+				, wrt.WTS_RESOURCE_TYPE
+				, wrt.[DESCRIPTION]
+				, ww.ARCHIVE
+				, '' as X
+				, ww.CREATEDBY
+				, convert(varchar, ww.CREATEDDATE, 110) AS CREATEDDATE
+				, ww.UPDATEDBY
+				, convert(varchar, ww.UPDATEDDATE, 110) AS UPDATEDDATE
+				, wrt.SORT_ORDER
+			FROM
+				WorkActivity_WTS_RESOURCE_TYPE ww
+					LEFT JOIN WORKITEMTYPE WIT ON ww.WORKITEMTYPEID = WIT.WORKITEMTYPEID
+					LEFT JOIN WTS_RESOURCE_TYPE wrt ON ww.WTS_RESOURCE_TYPEID = wrt.WTS_RESOURCE_TYPEID
+			WHERE  
+				(ISNULL(@WORKITEMTYPEID,0) = 0 OR WIT.WORKITEMTYPEID = @WORKITEMTYPEID)
+				
+		) ww
+		ORDER BY ww.SORT_ORDER ASC;
+END;
+

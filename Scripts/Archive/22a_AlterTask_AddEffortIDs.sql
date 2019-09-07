@@ -1,0 +1,19 @@
+USE WTS
+GO
+
+ALTER TABLE WORKITEM_TASK
+ADD EstimatedEffortID int null
+	, ActualEffortID int null
+;
+
+GO
+
+ALTER TABLE WORKITEM_TASK
+ADD CONSTRAINT [FK_WORKITEM_TASK_EstimatedEffort] FOREIGN KEY ([EstimatedEffortID]) REFERENCES [EffortSize]([EffortSizeID]);
+
+GO
+
+ALTER TABLE WORKITEM_TASK
+ADD CONSTRAINT [FK_WORKITEM_TASK_ActualEffort] FOREIGN KEY ([ActualEffortID]) REFERENCES [EffortSize]([EffortSizeID]);
+
+GO

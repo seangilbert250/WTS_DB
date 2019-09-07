@@ -1,0 +1,12 @@
+use [WTS]
+go
+
+UPDATE WORKITEM_TASK 
+SET WORKITEMID = wih.[OldValue]
+	from WORKITEM_TASK
+	inner join [WORKITEM_TASK_HISTORY] wih
+	on WORKITEM_TASK.WORKITEM_TASKID = wih.WORKITEM_TASKID
+	and wih.[FieldChanged] = 'Work Item'
+
+where WORKITEM_TASK.WORKITEM_TASKID = wih.WORKITEM_TASKID
+;
