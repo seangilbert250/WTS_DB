@@ -1,0 +1,48 @@
+USE [WTS]
+GO
+
+ALTER TABLE [dbo].[RQMTCategory] DROP CONSTRAINT [FK_RQMTCategory_RQMT]
+GO
+
+/****** Object:  Index [IDX_RQMTCategory_RQMT]    Script Date: 10/10/2018 9:57:22 AM ******/
+DROP INDEX [IDX_RQMTCategory_RQMT] ON [dbo].[RQMTCategory]
+GO
+
+/****** Object:  Table [dbo].[RQMTCategory]    Script Date: 10/10/2018 9:57:22 AM ******/
+DROP TABLE [dbo].[RQMTCategory]
+GO
+
+/****** Object:  Table [dbo].[RQMTCategory]    Script Date: 10/10/2018 9:57:22 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[RQMTCategory](
+	[RQMTCategoryID] [int] IDENTITY(1,1) NOT NULL,
+	[RQMTID] [int] NOT NULL,
+	[CategoryTypeID] [int] NULL,
+	[ItemID] [int] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[RQMTCategoryID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+/****** Object:  Index [IDX_RQMTCategory_RQMT]    Script Date: 10/10/2018 9:57:22 AM ******/
+CREATE NONCLUSTERED INDEX [IDX_RQMTCategory_RQMT] ON [dbo].[RQMTCategory]
+(
+	[RQMTID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[RQMTCategory]  WITH CHECK ADD  CONSTRAINT [FK_RQMTCategory_RQMT] FOREIGN KEY([RQMTID])
+REFERENCES [dbo].[RQMT] ([RQMTID])
+GO
+
+ALTER TABLE [dbo].[RQMTCategory] CHECK CONSTRAINT [FK_RQMTCategory_RQMT]
+GO
+
+

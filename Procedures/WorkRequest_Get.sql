@@ -1,0 +1,101 @@
+﻿USE WTS
+GO
+
+IF EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'[WorkRequest_Get]')
+AND OBJECTPROPERTY(id, N'IsProcedure') = 1)
+
+DROP PROCEDURE [WorkRequest_Get]
+
+GO
+USE [WTS]
+GO
+/****** Object:  StoredProcedure [dbo].[WorkRequest_Get]    Script Date: 6/7/2016 2:39:15 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[WorkRequest_Get]
+	@WorkRequestID int
+AS
+BEGIN
+	SELECT
+		wr.WORKREQUESTID
+		, wr.RequestGroupID
+		, rg.RequestGroup
+		, wr.TITLE
+		, wr.CONTRACTID
+		, c.[CONTRACT]
+		, wr.ORGANIZATIONID
+		, o.ORGANIZATION
+		, wr.[DESCRIPTION]
+		, wr.REQUESTTYPEID
+		, rt.REQUESTTYPE
+		, wr.WTS_SCOPEID
+		, s.SCOPE
+		, wr.EFFORTID
+		, e.EFFORT
+		, wr.SUBMITTEDBY
+		, sb.FIRST_NAME + ' ' + sb.LAST_NAME AS Submitted_Name
+		, wr.SMEID
+		, sme.FIRST_NAME + ' ' + sme.LAST_NAME AS SME
+		, wr.LEAD_IA_TWID
+		, lit.FIRST_NAME + ' ' + lit.LAST_NAME AS Lead_IA_TW
+		, wr.LEAD_RESOURCEID
+		, lr.FIRST_NAME + ' ' + lr.LAST_NAME AS Lead_Resource
+		, wr.OP_PRIORITYID
+		, p.[PRIORITY]
+		, wr.[DESCRIPTION]
+		, wr.JUSTIFICATION
+		, '' AS Last_Meeting
+		, '' AS Next_Meeting
+		, '' AS Dev_Start
+		, '' AS CIA_Risk
+		, '' AS CMMI
+		, wr.TD_STATUSID
+		, s_td.[STATUS] AS TD_STATUS
+		, wr.CD_STATUSID
+		, s_cd.[STATUS] AS CD_STATUS
+		, wr.C_STATUSID
+		, s_c.[STATUS] AS C_STATUS
+		, wr.IT_STATUSID
+		, s_it.[STATUS] AS IT_STATUS
+		, wr.CVT_STATUSID
+		, s_cvt.[STATUS] AS CVT_STATUS
+		, wr.A_STATUSID
+		, s_a.[STATUS] AS A_STATUS
+		, WR.CR_STATUSID
+		, s_cr.[STATUS] AS CR_STATUS
+		, 0 AS HasSlides
+		, 0 AS WorkStoppage
+		, WR.ARCHIVE
+		, wr.CREATEDBY
+		, wr.CREATEDDATE
+		, wr.UPDATEDBY
+		, wr.UPDATEDDATE
+	FROM
+		WORKREQUEST wr
+			LEFT JOIN RequestGroup rg ON wr.RequestGroupID = rg.RequestGroupID
+			LEFT JOIN [CONTRACT] c ON wr.CONTRACTID = c.CONTRACTID
+			LEFT JOIN ORGANIZATION o ON wr.ORGANIZATIONID = o.ORGANIZATIONID
+			LEFT JOIN REQUESTTYPE rt ON wr.REQUESTTYPEID = rt.REQUESTTYPEID
+			LEFT JOIN WTS_SCOPE s ON wr.WTS_SCOPEID = s.WTS_SCOPEID
+			LEFT JOIN EFFORT e ON wr.EFFORTID = e.EFFORTID
+			LEFT JOIN WTS_RESOURCE sb ON wr.SUBMITTEDBY = sb.WTS_RESOURCEID
+			LEFT JOIN WTS_RESOURCE sme ON wr.SMEID = sme.WTS_RESOURCEID
+			LEFT JOIN WTS_RESOURCE lit ON wr.LEAD_IA_TWID = lit.WTS_RESOURCEID
+			LEFT JOIN WTS_RESOURCE lr ON wr.LEAD_RESOURCEID = lr.WTS_RESOURCEID
+			LEFT JOIN [PRIORITY] p ON wr.OP_PRIORITYID = p.PRIORITYID
+			LEFT JOIN [STATUS] s_td ON wr.TD_STATUSID = s_td.STATUSID
+			LEFT JOIN [STATUS] s_cd ON wr.CD_STATUSID = s_cd.STATUSID
+			LEFT JOIN [STATUS] s_c ON wr.C_STATUSID = s_c.STATUSID
+			LEFT JOIN [STATUS] s_it ON wr.IT_STATUSID = s_it.STATUSID
+			LEFT JOIN [STATUS] s_cvt ON wr.CVT_STATUSID = s_cvt.STATUSID
+			LEFT JOIN [STATUS] s_a ON wr.A_STATUSID = s_a.STATUSID
+			LEFT JOIN [STATUS] s_cr ON wr.CR_STATUSID = s_cr.STATUSID
+	WHERE
+		wr.WORKREQUESTID = @WorkRequestID
+	;
+
+END;
+

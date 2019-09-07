@@ -1,0 +1,5 @@
+USE WTS
+GO
+
+ALTER TABLE [dbo].[User_Report_View] DROP CONSTRAINT [FK__User_Repo__WTS_R__1467C28E]
+GO

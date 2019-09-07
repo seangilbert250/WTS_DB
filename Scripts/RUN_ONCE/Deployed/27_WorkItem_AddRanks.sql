@@ -1,0 +1,15 @@
+USE WTS
+GO
+
+ALTER TABLE WORKITEM
+ADD [PrimaryBusinessResourceID] INT NULL
+, [SecondaryResourceRank] INT NULL
+, [PrimaryBusinessRank] INT NULL;
+
+GO
+
+ALTER TABLE WORKITEM
+ADD CONSTRAINT [FK_WORKITEM_BusinessResource] FOREIGN KEY ([PrimaryBusinessResourceID]) REFERENCES [WTS_RESOURCE]([WTS_RESOURCEID]);
+
+GO
+

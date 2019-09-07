@@ -1,0 +1,41 @@
+USE [WTS]
+GO
+
+/****** Object:  StoredProcedure [dbo].[RQMTDefectsImpactTask_Add]    Script Date: 9/27/2018 1:15:30 PM ******/
+DROP PROCEDURE [dbo].[RQMTDefectsImpactTask_Add]
+GO
+
+/****** Object:  StoredProcedure [dbo].[RQMTDefectsImpactTask_Add]    Script Date: 9/27/2018 1:15:30 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE PROCEDURE [dbo].[RQMTDefectsImpactTask_Add]
+(
+	@RQMTSystemDefectID INT,
+	@WORKITEM_TASKID INT,
+	@AddedBy NVARCHAR(50)
+)
+AS
+
+DECLARE @now DATETIME = GETDATE()
+
+IF NOT EXISTS (SELECT 1 FROM RQMTSystemDefectTask WHERE RQMTSystemDefectID = @RQMTSystemDefectID AND WORKITEM_TASKID = @WORKITEM_TASKID)
+BEGIN
+	INSERT INTO RQMTSystemDefectTask VALUES (@RQMTSystemDefectID, @WORKITEM_TASKID, @AddedBy, @now, @AddedBy, @now)
+
+	DECLARE @RQMTSystemID INT = (SELECT RQMTSystemID FROM RQMTSystemDefect WHERE RQMTSystemDefectID = @RQMTSystemDefectID)
+	DECLARE @WORKITEMID INT
+	DECLARE @TASKNUMBER INT
+	SELECT @WORKITEMID = WORKITEMID, @TASKNUMBER = TASK_NUMBER FROM WORKITEM_TASK WHERE WORKITEM_TASKID = @WORKITEM_TASKID
+	
+	DECLARE @AuditDesc NVARCHAR(100) = 'TASK ' + CONVERT(VARCHAR(100), @WORKITEMID) + '-' + CONVERT(VARCHAR(100), @TASKNUMBER) + ' ADDED'
+
+	EXEC dbo.AuditLog_Save @RQMTSystemDefectID, @RQMTSystemID, 3, 1, 'RQMTSystemDefectTask', NULL, @AuditDesc, @now, @AddedBy
+END
+GO
+
+

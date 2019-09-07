@@ -1,0 +1,1 @@
+ALTER TABLE GridView ADD SectionsXML XML NULL;

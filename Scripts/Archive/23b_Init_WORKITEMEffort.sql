@@ -1,0 +1,31 @@
+USE WTS
+GO
+
+--Estimated Effort
+UPDATE WORKITEM
+SET 
+	EstimatedEffortID = es.EffortSizeID
+FROM
+	EffortSize es
+WHERE
+	WORKITEM.ESTIMATEDHOURS IS NOT NULL
+	AND isnull(WORKITEM.ESTIMATEDHOURS,0) > 0
+	AND isnull(WORKITEM.ESTIMATEDHOURS,0) <= 40
+	AND es.EffortSize = 'S'
+;
+
+GO
+
+UPDATE WORKITEM
+SET 
+	EstimatedEffortID = es.EffortSizeID
+FROM
+	EffortSize es
+WHERE
+	WORKITEM.ESTIMATEDHOURS IS NOT NULL
+	AND isnull(WORKITEM.ESTIMATEDHOURS,0) > 40
+	AND isnull(WORKITEM.ESTIMATEDHOURS,0) <= 80
+	AND es.EffortSize = 'M'
+;
+
+GO
